@@ -51,4 +51,14 @@ public class QnAType extends BaseEntity {
         this.expoOrder = expoOrder;
         this.upperQnAType = upperQnAType;
     }
+
+    /**
+     * 양방향 연관관계 맺기.
+     *
+     * @param qnAType
+     */
+    public void setUpperQnAType(QnAType qnAType) {
+        this.upperQnAType = qnAType;
+        qnAType.getSubQnATypes().add(this);
+    }
 }
