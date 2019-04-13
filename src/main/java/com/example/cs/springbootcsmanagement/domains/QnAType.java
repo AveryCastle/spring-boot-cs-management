@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -49,16 +50,22 @@ public class QnAType extends BaseEntity {
     public QnAType(String title, int expoOrder, QnAType upperQnAType) {
         this.title = title;
         this.expoOrder = expoOrder;
-        this.upperQnAType = upperQnAType;
+        this.setUpperQnAType(upperQnAType);
     }
 
     /**
      * 양방향 연관관계 맺기.
      *
-     * @param qnAType
+     * @param upperQnAType
      */
-    public void setUpperQnAType(QnAType qnAType) {
-        this.upperQnAType = qnAType;
-        qnAType.getSubQnATypes().add(this);
+    public void setUpperQnAType(QnAType upperQnAType) {
+        if (Objects.isNull(upperQnAType)) return;
+
+        // 기존 upperQnAType과의 관계 제거하기.
+        if (Objects.nonNull(this.upperQnAType)) {
+            this.upperQnAType.getSubQnATypes().remove(this);
+        }
+        this.upperQnAType = upperQnAType;
+        upperQnAType.getSubQnATypes().add(this);
     }
 }
