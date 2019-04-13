@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -19,6 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 @Entity
@@ -39,10 +40,11 @@ public class QnAType extends BaseEntity {
     private int expoOrder = 0;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
-            fetch = FetchType.EAGER, mappedBy = "upperQnAType")
-    private Set<QnAType> subQnATypes = new HashSet<>();
+            fetch = FetchType.LAZY, mappedBy = "upperQnAType")
+    @OrderBy(value = "expo_order asc")
+    private Set<QnAType> subQnATypes = new LinkedHashSet<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "up_qna_type_id", foreignKey = @ForeignKey(name = "fk_tst_cs_qna_type_id"))
     private QnAType upperQnAType;
 
