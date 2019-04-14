@@ -1,19 +1,20 @@
 package com.example.cs.springbootcsmanagement.repositories;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.example.cs.springbootcsmanagement.domains.QnAType;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 class QnATypeRepositoryITest {
@@ -32,7 +33,6 @@ class QnATypeRepositoryITest {
     private QnATypeRepository qnaTypeRepository;
 
     @BeforeEach
-    @Transactional
     public void setUp() {
         QnAType useTip = QnAType.builder().title(USE_TIP_TITLE).expoOrder(2).build();
         QnAType payment = QnAType.builder().title(PAYMENT_TITLE).expoOrder(3).build();
@@ -55,15 +55,18 @@ class QnATypeRepositoryITest {
 
         QnAType supportDevice = QnAType.builder().title("단말지원").expoOrder(1).upperQnAType(device).build();
         qnaTypeRepository.save(supportDevice);
+    }
 
-        qnaTypeRepository.flush();
+    @AfterEach
+    public void cleanAll() {
+        qnaTypeRepository.deleteAll();
     }
 
     @Test
     public void givenQnATypes_whenFindAllByUpperQnAType_thenFetchAllEntityGraphOrderByExpoOrd() {
         List<QnAType> qnaTypes = qnaTypeRepository.findAllWithSubQnATypesOrderByExpoOrder();
 
-        assertEquals(6, qnaTypes.size());
+        assertEquals(3, qnaTypes.size());
 
         QnAType device = qnaTypes.get(0);
         QnAType useTip = qnaTypes.get(1);
@@ -73,7 +76,11 @@ class QnATypeRepositoryITest {
         assertEquals(USE_TIP_TITLE, useTip.getTitle());
         assertEquals(PAYMENT_TITLE, payment.getTitle());
 
-        assertTrueUseTipSubQnATypeOrdering(useTip);
+        List<String> actualTitles = useTip.getSubQnATypes().stream()
+                .map(qnaType -> qnaType.getTitle())
+                .collect(Collectors.toList());
+        String[] expectedTitle = {AUTHENTICATION_TITLE, CONNECTION_ERROR, SIGNUP_AND_CANCEL_TITLE};
+        assertArrayEquals(expectedTitle, actualTitles.toArray(String[]::new));
     }
 
     @Test
@@ -82,13 +89,10 @@ class QnATypeRepositoryITest {
 
         assertNotNull(useTip);
 
-        assertTrueUseTipSubQnATypeOrdering(useTip);
-    }
-
-    private void assertTrueUseTipSubQnATypeOrdering(QnAType useTip) {
-        Iterator<QnAType> useTipSubTypes = useTip.getSubQnATypes().iterator();
-        assertEquals(AUTHENTICATION_TITLE, useTipSubTypes.next().getTitle());
-        assertEquals(CONNECTION_ERROR, useTipSubTypes.next().getTitle());
-        assertEquals(SIGNUP_AND_CANCEL_TITLE, useTipSubTypes.next().getTitle());
+        List<String> actualTitles = useTip.getSubQnATypes().stream()
+                .map(qnaType -> qnaType.getTitle())
+                .collect(Collectors.toList());
+        String[] expectedTitle = {AUTHENTICATION_TITLE, CONNECTION_ERROR, SIGNUP_AND_CANCEL_TITLE};
+        assertArrayEquals(expectedTitle, actualTitles.toArray(String[]::new));
     }
 }
