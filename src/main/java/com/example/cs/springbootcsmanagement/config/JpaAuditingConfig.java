@@ -17,7 +17,7 @@ public class JpaAuditingConfig {
         // TODO: Security 연결 후 로그인한 계정 정보로 변경하기.
         /*
           if you are using spring security, you can get the currently logged username with following code segment.
-          SecurityContextHolder.getContext().getAuthentication().getName()
+          SecurityContextHolder.getContext().getAuthentication().getDescription()
          */
         return () -> Optional.ofNullable("Anonymous");
     }
