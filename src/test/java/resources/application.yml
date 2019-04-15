@@ -1,8 +1,11 @@
----
-## local
 spring:
-  profiles: local
+  profiles:
+    active: test
 
+---
+# test
+spring:
+  profiles: test
   # = DATA SOURCE
   datasource:
     platform: h2

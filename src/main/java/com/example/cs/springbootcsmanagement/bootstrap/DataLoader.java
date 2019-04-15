@@ -15,7 +15,7 @@ import java.util.Arrays;
 
 @Component
 @Slf4j
-@Profile(value = {"default", "local"})
+@Profile(value = {"local"})
 public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired
