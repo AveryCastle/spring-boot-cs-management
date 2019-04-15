@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.example.cs.springbootcsmanagement.domains.PoC;
 import com.example.cs.springbootcsmanagement.domains.QnAType;
+import com.example.cs.springbootcsmanagement.enums.PoCType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,18 +24,31 @@ class QnATypeRepositoryITest {
     private static final String USE_TIP_TITLE = "이용문의";
     private static final String PAYMENT_TITLE = "구매/결제";
     private static final String DEVICE_TITLE = "단말";
-
     private static final String SIGNUP_AND_CANCEL_TITLE = "회원 가입/탈퇴";
     private static final String AUTHENTICATION_TITLE = "회원인증";
     private static final String CONNECTION_ERROR = "접속 실패/오류";
 
+    private String oscId, osbId;
+
     private Long useTipId;
+
+    @Autowired
+    private PoCRepository pocRepository;
 
     @Autowired
     private QnATypeRepository qnaTypeRepository;
 
     @BeforeEach
     public void setUp() {
+        // Saving PoCs.
+        PoC osc = new PoC(PoCType.OSC);
+        PoC osb = new PoC(PoCType.OSB);
+        pocRepository.saveAll(Arrays.asList(osc, osb));
+
+        oscId = osc.getId();
+        osbId = osb.getId();
+
+        // Saving QnATypes.
         QnAType useTip = QnAType.builder().title(USE_TIP_TITLE).expoOrder(2).build();
         QnAType payment = QnAType.builder().title(PAYMENT_TITLE).expoOrder(3).build();
         QnAType device = QnAType.builder().title(DEVICE_TITLE).expoOrder(1).build();
