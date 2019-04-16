@@ -1,25 +1,20 @@
-package com.example.cs.springbootcsmanagement.bootstrap;
+package com.example.cs.springbootcsmanagement.repositories;
 
 import com.example.cs.springbootcsmanagement.domains.PoC;
 import com.example.cs.springbootcsmanagement.domains.PoCQnAType;
 import com.example.cs.springbootcsmanagement.domains.QnAType;
 import com.example.cs.springbootcsmanagement.enums.PoCType;
-import com.example.cs.springbootcsmanagement.repositories.PoCQnATypeRepository;
-import com.example.cs.springbootcsmanagement.repositories.PoCRepository;
-import com.example.cs.springbootcsmanagement.repositories.QnATypeRepository;
-import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Profile;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
+import java.util.List;
 
-@Component
-@Slf4j
-@Profile(value = {"local"})
-public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
+@SpringBootTest
+public class PoCQnARepositoryAggregateITest extends BaseRepositoryTest {
 
     @Autowired
     private PoCRepository pocRepository;
@@ -30,21 +25,12 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
     @Autowired
     private PoCQnATypeRepository pocQnATypeRepository;
 
-    @Override
-    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        cleanDatas();
-        loadDatas();
-    }
+    private PoC osc, osb;
 
-    private void cleanDatas() {
-        pocQnATypeRepository.deleteAll();
-        pocRepository.deleteAll();
-        qnaTypeRepository.deleteAll();
-    }
-
-    private void loadDatas() {
-        PoC osc = new PoC(PoCType.OSC);
-        PoC osb = new PoC(PoCType.OSB);
+    @BeforeEach
+    public void setUp() {
+        osc = new PoC(PoCType.OSC);
+        osb = new PoC(PoCType.OSB);
         pocRepository.saveAll(Arrays.asList(osc, osb));
 
         QnAType useTip = QnAType.builder().title("이용문의").expoOrder(3).build();
@@ -85,5 +71,23 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
         PoCQnAType osbDeviceSupport = PoCQnAType.builder().poc(osb).qnaType(deviceSupport).expoOrder(1).build();
         pocQnATypeRepository.save(osbDeviceSupport);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        pocQnATypeRepository.deleteAll();
+        pocRepository.deleteAll();
+        qnaTypeRepository.deleteAll();
+    }
+
+    @Test
+    public void find() {
+        List<PoC> entityGraph = pocRepository.findAllEntityGraph(osc.getId());
+
+        List<PoCQnAType> poCQnATypes = entityGraph.get(0).getPoCQnATypes();
+        poCQnATypes.stream().forEach(poCQnAType -> {
+            System.out.println(poCQnAType.getQnaType().getTitle());
+            System.out.println();
+        });
     }
 }

@@ -3,10 +3,7 @@ package com.example.cs.springbootcsmanagement.domains;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
+import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,11 +18,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tst_cs_qna_type")
 @Getter
 @NoArgsConstructor
+@ToString(exclude = {"subQnATypes"})
 public class QnAType extends BaseEntity {
 
     @Id
