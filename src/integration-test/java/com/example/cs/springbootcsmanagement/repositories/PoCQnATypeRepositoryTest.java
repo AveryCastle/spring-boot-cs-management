@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.transaction.Transactional;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,13 +22,15 @@ class PoCQnATypeRepositoryTest {
     private QnATypeRepository qnaTypeRepository;
 
     @Test
-    @Transactional
     public void test() {
+        System.out.println("test start ==>");
         List<QnAType> entityGraph = pocQnATypeRepository.findByPoCIdEntityGraph(PoCType.OSC.getLegacyCode());
+
+        System.out.println("test end ==>");
         Iterator<QnAType> iterator = entityGraph.iterator();
         while (iterator.hasNext()) {
             QnAType qnaType = iterator.next();
-            System.out.println(qnaType.toString());
+            System.out.println("id = " + qnaType.getId() + ", title: " + qnaType.getTitle());
         }
     }
 }

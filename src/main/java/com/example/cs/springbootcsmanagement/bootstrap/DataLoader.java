@@ -7,18 +7,15 @@ import com.example.cs.springbootcsmanagement.enums.PoCType;
 import com.example.cs.springbootcsmanagement.repositories.PoCQnATypeRepository;
 import com.example.cs.springbootcsmanagement.repositories.PoCRepository;
 import com.example.cs.springbootcsmanagement.repositories.QnATypeRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
-@Component
-@Slf4j
-@Profile(value = {"local"})
+//@Component
+//@Slf4j
+//@Profile(value = {"local"})
 public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired

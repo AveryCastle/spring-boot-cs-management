@@ -11,7 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class PoCQnARepositoryAggregateITest extends BaseRepositoryTest {
@@ -81,13 +86,29 @@ public class PoCQnARepositoryAggregateITest extends BaseRepositoryTest {
     }
 
     @Test
-    public void find() {
-        List<PoC> entityGraph = pocRepository.findAllEntityGraph(osc.getId());
+    public void test2() {
+        List<QnAType> subQnATypesByPoC = pocQnATypeRepository.findByPoCIdEntityGraph(PoCType.OSC.getLegacyCode());
+        List<Long> subQnATypeIds = subQnATypesByPoC.stream().map(subQnAType -> subQnAType.getId()).collect(Collectors.toList());
+        List<QnAType> qnaTypesByPoc = qnaTypeRepository.findWithSubQnATypesByDynamicParams(subQnATypeIds);
 
-        List<PoCQnAType> poCQnATypes = entityGraph.get(0).getPoCQnATypes();
-        poCQnATypes.stream().forEach(poCQnAType -> {
-            System.out.println(poCQnAType.getQnaType().getTitle());
-            System.out.println();
-        });
+        List<String> upperTitle = Arrays.asList("단말", "구매/결제", "이용문의");
+        for (int index = 0; index < upperTitle.size(); index++) {
+            QnAType firstUpperQnAType = qnaTypesByPoc.get(index);
+
+            assertEquals(upperTitle.get(index), firstUpperQnAType.getTitle());
+            assertEquals(index + 1, firstUpperQnAType.getExpoOrder());
+        }
+
+
+//        while (upperQnATypes.hasNext()) {
+//            QnAType qnaType = upperQnATypes.next();
+//            System.out.println("id = " + qnaType.getId() + ", title: " + qnaType.getTitle());
+//            Set<QnAType> subQnATypes = qnaType.getSubQnATypes();
+//            Iterator<QnAType> subIterator = subQnATypes.iterator();
+//            while (subIterator.hasNext()) {
+//                QnAType qnAType = subIterator.next();
+//                System.out.println("sub Id = " + qnAType.getId() + ":" + qnAType.getTitle() + " : " + qnAType.getExpoOrder());
+//            }
+//        }
     }
 }

@@ -5,7 +5,7 @@ import static com.example.cs.springbootcsmanagement.domains.QPoCQnAType.poCQnATy
 import static com.example.cs.springbootcsmanagement.domains.QQnAType.qnAType;
 
 import com.example.cs.springbootcsmanagement.domains.PoC;
-import com.example.cs.springbootcsmanagement.dto.QnATypeDTO;
+import com.example.cs.springbootcsmanagement.domains.QnAType;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -23,9 +23,9 @@ public class PoCRepositoryCustomImpl extends QuerydslRepositorySupport implement
     }
 
     @Override
-    public List<QnATypeDTO> findWithSubTypesOrderByExpoOrder(String pocId) {
+    public List<QnAType> findWithSubTypesOrderByExpoOrder(String pocId) {
         return jpaQueryFactory
-                .select(Projections.fields(QnATypeDTO.class,
+                .select(Projections.fields(QnAType.class,
                         qnAType.id, qnAType.title, qnAType.expoOrder.as("ordering"),
                         qnAType.subQnATypes.as("subTypes")))
                 .from(poC).where(poC.id.eq(pocId))

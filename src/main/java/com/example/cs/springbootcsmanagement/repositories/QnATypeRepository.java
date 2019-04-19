@@ -1,7 +1,6 @@
 package com.example.cs.springbootcsmanagement.repositories;
 
 import com.example.cs.springbootcsmanagement.domains.QnAType;
-
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface QnATypeRepository extends JpaRepository<QnAType, Long> {
+public interface QnATypeRepository extends JpaRepository<QnAType, Long>, QnATypeRepositoryCustom {
 
     @EntityGraph(attributePaths = "subQnATypes")
     @Query("select a from QnAType a where a.upperQnAType is null order by a.expoOrder asc")

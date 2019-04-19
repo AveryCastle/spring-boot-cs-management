@@ -4,7 +4,7 @@ import com.example.cs.springbootcsmanagement.domains.QnAType;
 
 import java.util.List;
 
-public interface PoCRepositoryCustom {
+public interface QnATypeRepositoryCustom {
 
-    List<QnAType> findWithSubTypesOrderByExpoOrder(String pocId);
+    List<QnAType> findWithSubQnATypesByDynamicParams(List<Long> subQnATypeIds);
 }
