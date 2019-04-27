@@ -27,3 +27,7 @@ HELP.md
 
 ### VS Code ###
 .vscode/
+
+### Compile Files ###
+backend/target/
+frontend/target/
