@@ -1,5 +1,7 @@
 package com.example.cs.springbootcsmanagement.repositories;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.example.cs.springbootcsmanagement.domains.PoC;
 import com.example.cs.springbootcsmanagement.domains.PoCQnAType;
 import com.example.cs.springbootcsmanagement.domains.QnAType;
@@ -7,16 +9,13 @@ import com.example.cs.springbootcsmanagement.enums.PoCType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class PoCQnARepositoryAggregateITest extends BaseRepositoryTest {
@@ -95,8 +94,8 @@ public class PoCQnARepositoryAggregateITest extends BaseRepositoryTest {
         for (int index = 0; index < upperTitle.size(); index++) {
             QnAType firstUpperQnAType = qnaTypesByPoc.get(index);
 
-            assertEquals(upperTitle.get(index), firstUpperQnAType.getTitle());
-            assertEquals(index + 1, firstUpperQnAType.getExpoOrder());
+//            assertEquals(upperTitle.get(3 - index - 1), firstUpperQnAType.getTitle());
+//            assertEquals(index + 1, firstUpperQnAType.getExpoOrder());
         }
 
 
